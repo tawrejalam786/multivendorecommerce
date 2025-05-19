@@ -10,7 +10,11 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\SubCategoryController;
 use App\Http\Controllers\Backend\ChildCategoryController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\ProductImageGalleryController;
+use App\Http\Controllers\Backend\ProductVariantController;
+use App\Http\Controllers\Backend\ProductVariantItemController;
 use App\Models\ChildCategory;
+use App\Models\ProductVariantItem;
 
 // Admin Routes
 Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -48,3 +52,14 @@ Route::get('product/get-subcategories', [ProductController::class, 'getSubCatego
 Route::get('product/get-childcategories', [ProductController::class, 'getChildCategories'])->name('product.get-child_categories');
 Route::resource('products', ProductController::class);
 
+/** Product Image Gallery Route */
+Route::resource('products-image-gallery', ProductImageGalleryController::class);
+
+/** Product Variant Route */
+Route::put('products-variant/change-status', [ProductVariantController::class, 'changeStatus'])->name('products-variant.change-status');
+Route::resource('products-variant', ProductVariantController::class);
+
+/** Product Variant Item Route */
+Route::get('product-variant-item/{productId}/{variantId}', [ProductVariantItemController::class, 'index'])->name('product-variant-item.index');
+Route::get('product-variant-item/create/{productId}/{variantId}', [ProductVariantItemController::class, 'create'])->name('product-variant-item.create');
+Route::post('product-variant-item', [ProductVariantItemController::class, 'store'])->name('product-variant-item.store');
