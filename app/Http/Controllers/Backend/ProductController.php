@@ -8,6 +8,8 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ChildCategory;
 use App\Models\Product;
+use App\Models\ProductImageGallery;
+use App\Models\ProductVariant;
 use App\Models\SubCategory;
 use App\Traits\ImageUploadTraits;
 use Illuminate\Http\Request;
@@ -134,7 +136,7 @@ class ProductController extends Controller
         $product->thumb_image = empty(!$imagePath) ? $imagePath : $product->thumb_image;
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
-        $product->vendor_id =  Auth::user()->vendor->id;
+        // $product->vendor_id =  Auth::user()->vendor->id;
         $product->category_id = $request->category;
         $product->sub_category_id = $request->sub_category;
         $product->child_category_id = $request->child_category;
@@ -150,7 +152,7 @@ class ProductController extends Controller
         $product->offer_end_date = $request->offer_end_date;
         $product->product_type = $request->product_type;
         $product->status = $request->status;
-        $product->is_approved = 1;
+        // $product->is_approved = 1;
         $product->seo_title = $request->seo_title;
         $product->seo_description = $request->seo_description;
         $product->save();
@@ -164,9 +166,39 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        /** Delete the main product Image */
+        $this->deleteImage($product->thumb_image);
+
+        /** Delete product Image gallery */
+        $galleryImages = ProductImageGallery::where('product_id', $product->id)->get();
+        foreach($galleryImages as $image)
+        {
+            $this->deleteImage($image->image);
+            $image->delete();
+        }
+
+        /** Delete product variants if exist */
+        $variants = ProductVariant::where('product_id', $product->id)->get();
+        foreach($variants as $variant)
+        {
+            $variant->productVariantItems()->delete();
+            $variant->delete();
+        }
+
+        $product->delete();
+        
+        return response(['status' => 'success', 'message' => 'Deleted Product Successfully!']);
     }
 
+    public function changeStatus(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        $product->status = $request->status == 'true' ? 1 : 0;
+        $product->save();
+
+        return response(['message' => 'Status has been updated!']);
+    }
     
     /**
      * Get All Product Sub Categories.

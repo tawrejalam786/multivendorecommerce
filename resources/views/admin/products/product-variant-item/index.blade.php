@@ -17,7 +17,7 @@
             <div class="card-header d-flex justify-content-between">
              <div class="headingss">
                <h4 style="margin: 0px;line-height:0;">All Product Variant Items</h4><br>
-               {{-- <h3 style="font-size: 14px;margin-top:0;">Product : {{$product->name}}</h3> --}}
+               <h3 style="font-size: 14px;margin-top:0;">Variant : {{$variant->name}}</h3>
              </div>
               <div class="card-header-action">
                 <a href="{{route('admin.product-variant-item.create', ['productId' => $product->id, 'variantId' => $variant->id])}}" class="btn btn-primary"> <i class="fas fa-plus"></i> Create New</a>
@@ -49,7 +49,7 @@
           let id = $(this).data('id');
 
           $.ajax({
-            url: "{{route('admin.products-variant.change-status')}}",
+            url: "{{route('admin.product-variant-item.change-status')}}",
             method: 'PUT',
             data: {
               status: isChecked,

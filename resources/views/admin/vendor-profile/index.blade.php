@@ -28,6 +28,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label>Shop Name</label>
+                                <input type="text" class="form-control" value="{{$profile->shop_name}}" name="shop_name" placeholder="Enter Shop Name...">
+                              </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label>Phone</label>
                                 <input type="text" class="form-control" value="{{$profile->phone}}" name="phone" placeholder="Enter phone no...">
                               </div>
